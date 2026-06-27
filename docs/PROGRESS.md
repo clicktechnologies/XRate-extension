@@ -11,6 +11,8 @@
 - Added TypeScript domain, application, infrastructure, content, popup, and background modules.
 - Added Node test coverage for parsing, XML ingestion, conversion, and rate freshness.
 - Added parsing for Russian ruble word forms such as `80 рублей` and Turkish lira alias `678 TL`.
+- Added broader target-currency coverage for international use, including AUD, CAD, CHF, SGD, HKD, NZD, AED, INR, BRL, PLN, SEK, NOK, DKK, THB, and ZAR.
+- Added safe parser aliases for selected international forms such as `zł`, `₹`, `฿`, `yuan`, `yen`, `won`, `baht`, and `rand`.
 
 ### Decisions
 
@@ -31,7 +33,7 @@
 ### Diffstat Summary
 
 - Added 29 project files outside generated directories.
-- Generated extension bundle in `dist/`: 271494 bytes total.
+- Generated extension bundle in `dist/`: 278190 bytes total.
 
 ### Falsehood Audit
 

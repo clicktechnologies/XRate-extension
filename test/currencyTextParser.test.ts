@@ -48,6 +48,38 @@ test("parses Turkish lira TL suffix", () => {
   });
 });
 
+test("parses additional international currency aliases", () => {
+  assert.deepEqual(parseCurrencyAmount("45 zł"), {
+    currencyCode: "PLN",
+    originalText: "45 zł",
+    value: 45
+  });
+
+  assert.deepEqual(parseCurrencyAmount("₹1,200"), {
+    currencyCode: "INR",
+    originalText: "₹1,200",
+    value: 1200
+  });
+
+  assert.deepEqual(parseCurrencyAmount("500 ฿"), {
+    currencyCode: "THB",
+    originalText: "500 ฿",
+    value: 500
+  });
+
+  assert.deepEqual(parseCurrencyAmount("100 CHF"), {
+    currencyCode: "CHF",
+    originalText: "100 CHF",
+    value: 100
+  });
+
+  assert.deepEqual(parseCurrencyAmount("200 yuan"), {
+    currencyCode: "CNY",
+    originalText: "200 yuan",
+    value: 200
+  });
+});
+
 test("rejects long text selections", () => {
   assert.equal(parseCurrencyAmount("The product costs 100.8 USD and this sentence is intentionally too long for a tooltip."), null);
 });

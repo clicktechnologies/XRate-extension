@@ -3,7 +3,7 @@ import type { CurrencyAmount } from "./currencyAmount.js";
 
 const MAX_SELECTION_LENGTH = 80;
 const AMOUNT_PATTERN = String.raw`\d(?:[\d\s\u00A0\u202F.,]*\d)?`;
-const SYMBOL_PATTERN = String.raw`[$€£₩₽₸₺]`;
+const SYMBOL_PATTERN = String.raw`[$€£₩₽₸₺₹฿]`;
 const TOKEN_PATTERN = String.raw`[\p{L}.]{2,12}`;
 
 const SYMBOL_PREFIX_PATTERN = new RegExp(String.raw`^\s*(${SYMBOL_PATTERN})\s*(${AMOUNT_PATTERN})\s*$`, "u");
