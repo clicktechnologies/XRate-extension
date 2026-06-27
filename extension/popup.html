@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>XRate</title>
+    <link rel="stylesheet" href="popup.css">
+  </head>
+  <body>
+    <main class="xrate-popup">
+      <header class="xrate-popup__header">
+        <h1>XRate</h1>
+        <label class="xrate-toggle">
+          <input id="enabled" type="checkbox">
+          <span>Включено</span>
+        </label>
+      </header>
+
+      <section>
+        <h2>Валюты tooltip</h2>
+        <div id="currency-list" class="xrate-currency-list"></div>
+      </section>
+
+      <section class="xrate-source">
+        <h2>Курс</h2>
+        <dl>
+          <div>
+            <dt>Источник</dt>
+            <dd id="source-name">Загрузка...</dd>
+          </div>
+          <div>
+            <dt>Дата курса</dt>
+            <dd id="rate-date">Загрузка...</dd>
+          </div>
+          <div>
+            <dt>Обновлено</dt>
+            <dd id="fetched-at">Загрузка...</dd>
+          </div>
+        </dl>
+        <a id="source-link" href="https://www.cbr.ru/scripts/XML_daily.asp" target="_blank" rel="noreferrer">Открыть источник</a>
+        <button id="refresh-rates" type="button">Обновить курс</button>
+      </section>
+
+      <p id="status" class="xrate-status" role="status"></p>
+    </main>
+    <script src="popup.js"></script>
+  </body>
+</html>

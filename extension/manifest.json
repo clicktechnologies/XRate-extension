@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "XRate",
+  "version": "0.1.0",
+  "description": "Convert selected currency amounts using official exchange rates.",
+  "permissions": ["storage"],
+  "host_permissions": ["https://www.cbr.ru/*"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "XRate"
+  },
+  "background": {
+    "service_worker": "background/worker.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": ["content/selectionController.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
