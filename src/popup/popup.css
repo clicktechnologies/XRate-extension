@@ -1,30 +1,54 @@
 :root {
   color-scheme: light dark;
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  --bg: #f8fafc;
+  --surface: #ffffff;
+  --surface-2: #f1f5f9;
+  --border: #dbe3ef;
+  --text: #0f172a;
+  --muted: #64748b;
+  --accent: #ea580c;
+  --accent-weak: rgba(234, 88, 12, 0.1);
+  --accent-border: rgba(234, 88, 12, 0.45);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0b1220;
+    --surface: #131c2e;
+    --surface-2: #0f1728;
+    --border: #2b3a52;
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --accent: #fb923c;
+    --accent-weak: rgba(251, 146, 60, 0.16);
+    --accent-border: rgba(251, 146, 60, 0.5);
+  }
+}
+
+* {
+  box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  min-width: 320px;
-  background: #f8fafc;
-  color: #0f172a;
+  min-width: 340px;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
 }
 
 button,
-input {
+input,
+select {
   font: inherit;
+  color: inherit;
 }
 
-.xrate-popup {
-  display: grid;
-  gap: 16px;
-  padding: 16px;
-}
-
-.xrate-popup__header {
-  align-items: center;
-  display: flex;
-  justify-content: space-between;
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 h1,
@@ -33,26 +57,120 @@ p {
   margin: 0;
 }
 
-h1 {
-  font-size: 20px;
-  line-height: 1.2;
+.xrate-popup {
+  display: grid;
+  gap: 16px;
+  padding: 16px;
 }
 
-h2 {
-  font-size: 13px;
-  letter-spacing: 0.02em;
-  line-height: 1.3;
-  margin-bottom: 8px;
-  text-transform: uppercase;
+/* Header */
+.xrate-popup__header {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
 }
 
-.xrate-toggle,
-.xrate-currency {
+.xrate-brand {
   align-items: center;
   display: flex;
   gap: 8px;
 }
 
+.xrate-brand__icon {
+  border-radius: 6px;
+  height: 24px;
+  width: 24px;
+}
+
+h1 {
+  font-size: 18px;
+  line-height: 1.2;
+}
+
+/* Toggle switch */
+.xrate-switch {
+  align-items: center;
+  cursor: pointer;
+  display: flex;
+  gap: 8px;
+  color: var(--muted);
+}
+
+.xrate-switch input {
+  appearance: none;
+  background: var(--border);
+  border-radius: 999px;
+  cursor: pointer;
+  height: 22px;
+  margin: 0;
+  position: relative;
+  transition: background 0.15s ease;
+  width: 38px;
+}
+
+.xrate-switch input::after {
+  background: #ffffff;
+  border-radius: 50%;
+  content: "";
+  height: 18px;
+  left: 2px;
+  position: absolute;
+  top: 2px;
+  transition: transform 0.15s ease;
+  width: 18px;
+}
+
+.xrate-switch input:checked {
+  background: var(--accent);
+}
+
+.xrate-switch:has(input:checked) {
+  color: var(--text);
+}
+
+.xrate-switch input:checked::after {
+  transform: translateX(16px);
+}
+
+/* Sections */
+.xrate-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+}
+
+.xrate-section__head {
+  align-items: baseline;
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+}
+
+h2 {
+  color: var(--muted);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+
+.xrate-count {
+  color: var(--accent);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+.xrate-hint {
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: -4px;
+}
+
+/* Currency chips */
 .xrate-currency-list {
   display: grid;
   gap: 8px;
@@ -60,88 +178,132 @@ h2 {
 }
 
 .xrate-currency {
-  background: #ffffff;
-  border: 1px solid #dbe3ef;
-  border-radius: 8px;
-  padding: 8px;
+  align-items: center;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  padding: 9px 11px;
+  transition: border-color 0.12s ease, background 0.12s ease;
+  user-select: none;
 }
 
-.xrate-source {
-  background: #ffffff;
-  border: 1px solid #dbe3ef;
-  border-radius: 8px;
+.xrate-currency:hover {
+  border-color: var(--accent-border);
+}
+
+.xrate-currency__input {
+  height: 1px;
+  opacity: 0;
+  position: absolute;
+  width: 1px;
+}
+
+.xrate-currency__code {
+  font-weight: 600;
+}
+
+.xrate-currency__symbol {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.xrate-currency:has(.xrate-currency__input:checked) {
+  background: var(--accent-weak);
+  border-color: var(--accent-border);
+}
+
+.xrate-currency:has(.xrate-currency__input:checked) .xrate-currency__code {
+  color: var(--accent);
+}
+
+.xrate-currency:has(.xrate-currency__input:focus-visible) {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Source field */
+.xrate-field {
   display: grid;
-  gap: 10px;
-  padding: 12px;
+  gap: 4px;
 }
 
-dl {
-  display: grid;
-  gap: 8px;
-  margin: 0;
-}
-
-dl div {
-  display: grid;
-  gap: 2px;
-}
-
-dt {
-  color: #64748b;
+.xrate-field__label {
+  color: var(--muted);
   font-size: 12px;
 }
 
-dd {
+select {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  padding: 8px 10px;
+  width: 100%;
+}
+
+/* Source metadata */
+.xrate-meta {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+}
+
+.xrate-meta div {
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+}
+
+.xrate-meta dt {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.xrate-meta dd {
+  font-size: 12px;
   margin: 0;
   overflow-wrap: anywhere;
+  text-align: right;
+}
+
+/* Actions */
+.xrate-actions {
+  align-items: center;
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
 }
 
 a {
-  color: #075985;
+  color: var(--accent);
+  font-size: 12px;
 }
 
 button {
-  background: #0f172a;
+  background: var(--text);
   border: 0;
   border-radius: 8px;
-  color: #ffffff;
+  color: var(--bg);
   cursor: pointer;
-  padding: 8px 10px;
+  font-weight: 600;
+  padding: 8px 14px;
+}
+
+button:hover:not(:disabled) {
+  opacity: 0.9;
 }
 
 button:disabled {
   cursor: not-allowed;
-  opacity: 0.6;
+  opacity: 0.55;
 }
 
 .xrate-status {
-  color: #475569;
-  min-height: 18px;
-}
-
-@media (prefers-color-scheme: dark) {
-  body {
-    background: #0f172a;
-    color: #e2e8f0;
-  }
-
-  .xrate-currency,
-  .xrate-source {
-    background: #111827;
-    border-color: #334155;
-  }
-
-  dt,
-  .xrate-status {
-    color: #94a3b8;
-  }
-
-  a {
-    color: #7dd3fc;
-  }
-
-  button {
-    background: #e2e8f0;
-    color: #0f172a;
-  }
+  color: var(--muted);
+  font-size: 12px;
+  min-height: 16px;
+  text-align: center;
 }

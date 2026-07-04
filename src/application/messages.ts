@@ -4,6 +4,8 @@ import type { ConversionResult } from "./conversionService.js";
 import type { CurrencyAmount, CurrencyDescriptor } from "../domain/currencyAmount.js";
 import { isRecord } from "../domain/rateSnapshot.js";
 import type { RateSourceMetadata } from "../domain/rateSnapshot.js";
+import { isRateSourceId } from "../domain/rateSource.js";
+import type { RateSourceDescriptor } from "../domain/rateSource.js";
 
 export type ConvertSelectionRequest = {
   readonly selectedText: string;
@@ -43,6 +45,7 @@ export type ConversionResponse =
 
 export type PopupStateResponse = {
   readonly availableCurrencies: readonly CurrencyDescriptor[];
+  readonly availableSources: readonly RateSourceDescriptor[];
   readonly settings: Settings;
   readonly source: RateSourceMetadata | null;
   readonly type: "popup-state";
@@ -168,19 +171,54 @@ function parseConversionPayload(value: Record<string, unknown>): ConversionRespo
 
 function parsePopupStatePayload(value: Record<string, unknown>): PopupStateResponse | null {
   const availableCurrencies = parseCurrencyDescriptors(value.availableCurrencies);
+  const availableSources = parseRateSourceDescriptors(value.availableSources);
   const settings = parseSettings(value.settings);
   const source = value.source === null ? null : parseRateSourceMetadata(value.source);
 
-  if (availableCurrencies === null || settings === null || source === null && value.source !== null) {
+  if (
+    availableCurrencies === null ||
+    availableSources === null ||
+    settings === null ||
+    (source === null && value.source !== null)
+  ) {
     return null;
   }
 
   return {
     availableCurrencies,
+    availableSources,
     settings,
     source,
     type: "popup-state"
   };
+}
+
+function parseRateSourceDescriptors(value: unknown): readonly RateSourceDescriptor[] | null {
+  if (!Array.isArray(value)) {
+    return null;
+  }
+
+  const descriptors: RateSourceDescriptor[] = [];
+
+  for (const item of value) {
+    if (!isRecord(item)) {
+      return null;
+    }
+
+    const id = item.id;
+    const name = readString(item, "name");
+
+    if (!isRateSourceId(id) || name === null) {
+      return null;
+    }
+
+    descriptors.push({
+      id,
+      name
+    });
+  }
+
+  return descriptors;
 }
 
 function parseCurrencyAmountRecord(value: unknown): CurrencyAmount | null {

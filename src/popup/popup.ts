@@ -2,9 +2,13 @@ import { parseExtensionResponse } from "../application/messages.js";
 import type { ExtensionResponse, PopupStateResponse } from "../application/messages.js";
 import type { Settings } from "../application/settings.js";
 import type { CurrencyDescriptor } from "../domain/currencyAmount.js";
+import { DEFAULT_RATE_SOURCE_ID, isRateSourceId } from "../domain/rateSource.js";
+import type { RateSourceDescriptor, RateSourceId } from "../domain/rateSource.js";
 
 const enabledInput = requireElement("enabled", HTMLInputElement);
+const sourceSelect = requireElement("source-select", HTMLSelectElement);
 const currencyList = requireElement("currency-list", HTMLDivElement);
+const currencyCount = requireElement("currency-count", HTMLElement);
 const sourceName = requireElement("source-name", HTMLElement);
 const sourceLink = requireElement("source-link", HTMLAnchorElement);
 const rateDate = requireElement("rate-date", HTMLElement);
@@ -15,6 +19,10 @@ const statusText = requireElement("status", HTMLElement);
 let currentState: PopupStateResponse | null = null;
 
 enabledInput.addEventListener("change", () => {
+  saveCurrentSettings().catch(showError);
+});
+
+sourceSelect.addEventListener("change", () => {
   saveCurrentSettings().catch(showError);
 });
 
@@ -87,8 +95,21 @@ function renderPopupResponse(response: ExtensionResponse): void {
   }
 
   currentState = response.payload;
+  renderSources(response.payload.availableSources, response.payload.settings.source);
   renderSettings(response.payload.settings, response.payload.availableCurrencies);
   renderSource(response.payload);
+}
+
+function renderSources(availableSources: readonly RateSourceDescriptor[], current: RateSourceId): void {
+  sourceSelect.replaceChildren();
+
+  for (const source of availableSources) {
+    const option = document.createElement("option");
+    option.value = source.id;
+    option.textContent = source.name;
+    option.selected = source.id === current;
+    sourceSelect.append(option);
+  }
 }
 
 function renderSettings(settings: Settings, availableCurrencies: readonly CurrencyDescriptor[]): void {
@@ -98,21 +119,37 @@ function renderSettings(settings: Settings, availableCurrencies: readonly Curren
   for (const currency of availableCurrencies) {
     const label = document.createElement("label");
     label.className = "xrate-currency";
+    label.title = currency.displayName;
 
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
+    checkbox.className = "xrate-currency__input";
     checkbox.value = currency.code;
     checkbox.checked = settings.targetCurrencies.includes(currency.code);
     checkbox.addEventListener("change", () => {
+      updateCurrencyCount();
       saveCurrentSettings().catch(showError);
     });
 
-    const text = document.createElement("span");
-    text.textContent = `${currency.code} ${currency.symbol}`;
+    const code = document.createElement("span");
+    code.className = "xrate-currency__code";
+    code.textContent = currency.code;
 
-    label.append(checkbox, text);
+    const symbol = document.createElement("span");
+    symbol.className = "xrate-currency__symbol";
+    symbol.textContent = currency.symbol;
+
+    label.append(checkbox, code, symbol);
     currencyList.append(label);
   }
+
+  updateCurrencyCount();
+}
+
+function updateCurrencyCount(): void {
+  const checkboxes = currencyList.querySelectorAll("input[type='checkbox']");
+  const selected = currencyList.querySelectorAll("input[type='checkbox']:checked");
+  currencyCount.textContent = `${selected.length} / ${checkboxes.length}`;
 }
 
 function renderSource(state: PopupStateResponse): void {
@@ -120,7 +157,7 @@ function renderSource(state: PopupStateResponse): void {
     sourceName.textContent = "Нет загруженного курса";
     rateDate.textContent = "Нет данных";
     fetchedAt.textContent = "Нет данных";
-    sourceLink.href = "https://www.cbr.ru/scripts/XML_daily.asp";
+    sourceLink.href = "#";
     return;
   }
 
@@ -142,6 +179,7 @@ function readSettingsFromForm(availableCurrencies: readonly CurrencyDescriptor[]
 
   return {
     enabled: enabledInput.checked,
+    source: isRateSourceId(sourceSelect.value) ? sourceSelect.value : DEFAULT_RATE_SOURCE_ID,
     targetCurrencies: selectedCurrencies
   };
 }

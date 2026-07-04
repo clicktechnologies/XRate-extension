@@ -14,8 +14,13 @@ test("parses a valid popup state response", () => {
             symbol: "$"
           }
         ],
+        availableSources: [
+          { id: "ecb", name: "European Central Bank" },
+          { id: "cbr", name: "Bank of Russia" }
+        ],
         settings: {
           enabled: true,
+          source: "cbr",
           targetCurrencies: ["USD"]
         },
         source: {
@@ -37,8 +42,13 @@ test("parses a valid popup state response", () => {
             symbol: "$"
           }
         ],
+        availableSources: [
+          { id: "ecb", name: "European Central Bank" },
+          { id: "cbr", name: "Bank of Russia" }
+        ],
         settings: {
           enabled: true,
+          source: "cbr",
           targetCurrencies: ["USD"]
         },
         source: {

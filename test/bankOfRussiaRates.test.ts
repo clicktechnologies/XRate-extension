@@ -25,19 +25,20 @@ test("parses Bank of Russia XML into RUB-based rates", () => {
 
   assert.equal(snapshot.sourceName, "Bank of Russia");
   assert.equal(snapshot.sourceUrl, "https://www.cbr.ru/scripts/XML_daily.asp");
+  assert.equal(snapshot.baseCurrency, "RUB");
   assert.equal(snapshot.rateDate, "27.06.2026");
   assert.equal(snapshot.fetchedAtIso, "2026-06-27T12:00:00.000Z");
-  assert.deepEqual(snapshot.ratesToRub.USD, {
+  assert.deepEqual(snapshot.ratesToBase.USD, {
     nominal: 1,
-    valueInRub: 77.0611
+    valueInBase: 77.0611
   });
-  assert.deepEqual(snapshot.ratesToRub.KRW, {
+  assert.deepEqual(snapshot.ratesToBase.KRW, {
     nominal: 1000,
-    valueInRub: 49.8681
+    valueInBase: 49.8681
   });
-  assert.deepEqual(snapshot.ratesToRub.RUB, {
+  assert.deepEqual(snapshot.ratesToBase.RUB, {
     nominal: 1,
-    valueInRub: 1
+    valueInBase: 1
   });
 });
 

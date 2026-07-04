@@ -2,7 +2,7 @@ export const RATE_CACHE_TTL_MS = 4 * 60 * 60 * 1000;
 
 export type RateEntry = {
   readonly nominal: number;
-  readonly valueInRub: number;
+  readonly valueInBase: number;
 };
 
 export type RateSourceMetadata = {
@@ -13,12 +13,13 @@ export type RateSourceMetadata = {
 };
 
 export type RateSnapshot = RateSourceMetadata & {
-  readonly ratesToRub: Record<string, RateEntry>;
+  readonly baseCurrency: string;
+  readonly ratesToBase: Record<string, RateEntry>;
 };
 
-const RUB_RATE_ENTRY: RateEntry = {
+const BASE_RATE_ENTRY: RateEntry = {
   nominal: 1,
-  valueInRub: 1
+  valueInBase: 1
 };
 
 export function isRateSnapshotFresh(snapshot: RateSnapshot, nowMs: number): boolean {
@@ -32,11 +33,11 @@ export function isRateSnapshotFresh(snapshot: RateSnapshot, nowMs: number): bool
 }
 
 export function getRateEntry(snapshot: RateSnapshot, currencyCode: string): RateEntry | null {
-  if (currencyCode === "RUB") {
-    return RUB_RATE_ENTRY;
+  if (currencyCode === snapshot.baseCurrency) {
+    return BASE_RATE_ENTRY;
   }
 
-  const entry = snapshot.ratesToRub[currencyCode];
+  const entry = snapshot.ratesToBase[currencyCode];
   return entry === undefined ? null : entry;
 }
 
@@ -47,30 +48,34 @@ export function parseRateSnapshot(value: unknown): RateSnapshot | null {
 
   const fetchedAtIso = readString(value, "fetchedAtIso");
   const rateDate = readString(value, "rateDate");
+  const baseCurrency = readString(value, "baseCurrency");
   const sourceName = readString(value, "sourceName");
   const sourceUrl = readString(value, "sourceUrl");
-  const ratesToRubValue = value.ratesToRub;
+  const ratesToBaseValue = value.ratesToBase;
 
   if (
     fetchedAtIso === null ||
     rateDate === null ||
+    baseCurrency === null ||
+    !/^[A-Z]{3}$/u.test(baseCurrency) ||
     sourceName === null ||
     sourceUrl === null ||
-    !isRecord(ratesToRubValue)
+    !isRecord(ratesToBaseValue)
   ) {
     return null;
   }
 
-  const ratesToRub = parseRateEntries(ratesToRubValue);
+  const ratesToBase = parseRateEntries(ratesToBaseValue);
 
-  if (ratesToRub === null) {
+  if (ratesToBase === null) {
     return null;
   }
 
   return {
+    baseCurrency,
     fetchedAtIso,
     rateDate,
-    ratesToRub,
+    ratesToBase,
     sourceName,
     sourceUrl
   };
@@ -85,15 +90,15 @@ function parseRateEntries(value: Record<string, unknown>): Record<string, RateEn
     }
 
     const nominal = readNumber(rawEntry, "nominal");
-    const valueInRub = readNumber(rawEntry, "valueInRub");
+    const valueInBase = readNumber(rawEntry, "valueInBase");
 
-    if (nominal === null || valueInRub === null || nominal <= 0 || valueInRub <= 0) {
+    if (nominal === null || valueInBase === null || nominal <= 0 || valueInBase <= 0) {
       return null;
     }
 
     entries[currencyCode] = {
       nominal,
-      valueInRub
+      valueInBase
     };
   }
 

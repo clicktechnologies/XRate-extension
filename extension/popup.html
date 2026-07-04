@@ -9,21 +9,32 @@
   <body>
     <main class="xrate-popup">
       <header class="xrate-popup__header">
-        <h1>XRate</h1>
-        <label class="xrate-toggle">
+        <div class="xrate-brand">
+          <img class="xrate-brand__icon" src="icons/icon-48.png" alt="">
+          <h1>XRate</h1>
+        </div>
+        <label class="xrate-switch">
           <input id="enabled" type="checkbox">
           <span>Включено</span>
         </label>
       </header>
 
-      <section>
-        <h2>Валюты tooltip</h2>
+      <section class="xrate-section">
+        <div class="xrate-section__head">
+          <h2>Валюты конвертации</h2>
+          <span id="currency-count" class="xrate-count"></span>
+        </div>
+        <p class="xrate-hint">Показываются в подсказке при выделении суммы</p>
         <div id="currency-list" class="xrate-currency-list"></div>
       </section>
 
-      <section class="xrate-source">
-        <h2>Курс</h2>
-        <dl>
+      <section class="xrate-section">
+        <h2>Источник курса</h2>
+        <label class="xrate-field">
+          <span class="xrate-field__label">Провайдер</span>
+          <select id="source-select"></select>
+        </label>
+        <dl class="xrate-meta">
           <div>
             <dt>Источник</dt>
             <dd id="source-name">Загрузка...</dd>
@@ -37,8 +48,10 @@
             <dd id="fetched-at">Загрузка...</dd>
           </div>
         </dl>
-        <a id="source-link" href="https://www.cbr.ru/scripts/XML_daily.asp" target="_blank" rel="noreferrer">Открыть источник</a>
-        <button id="refresh-rates" type="button">Обновить курс</button>
+        <div class="xrate-actions">
+          <a id="source-link" href="https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml" target="_blank" rel="noreferrer">Открыть источник</a>
+          <button id="refresh-rates" type="button">Обновить курс</button>
+        </div>
       </section>
 
       <p id="status" class="xrate-status" role="status"></p>

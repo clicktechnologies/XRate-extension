@@ -2,9 +2,10 @@ import { DEFAULT_SETTINGS, normalizeSettings, parseSettings } from "../applicati
 import type { Settings } from "../application/settings.js";
 import { parseRateSnapshot } from "../domain/rateSnapshot.js";
 import type { RateSnapshot } from "../domain/rateSnapshot.js";
+import type { RateSourceId } from "../domain/rateSource.js";
 
 const SETTINGS_KEY = "xrate.settings";
-const RATE_SNAPSHOT_KEY = "xrate.rateSnapshot";
+const RATE_SNAPSHOT_KEY_PREFIX = "xrate.rateSnapshot.";
 
 export async function readSettings(): Promise<Settings> {
   const values: Record<string, unknown> = await chrome.storage.sync.get(SETTINGS_KEY);
@@ -20,13 +21,14 @@ export async function writeSettings(settings: Settings): Promise<Settings> {
   return normalizedSettings;
 }
 
-export async function readCachedRateSnapshot(): Promise<RateSnapshot | null> {
-  const values: Record<string, unknown> = await chrome.storage.session.get(RATE_SNAPSHOT_KEY);
-  return parseRateSnapshot(values[RATE_SNAPSHOT_KEY]);
+export async function readCachedRateSnapshot(sourceId: RateSourceId): Promise<RateSnapshot | null> {
+  const key = RATE_SNAPSHOT_KEY_PREFIX + sourceId;
+  const values: Record<string, unknown> = await chrome.storage.session.get(key);
+  return parseRateSnapshot(values[key]);
 }
 
-export async function writeCachedRateSnapshot(snapshot: RateSnapshot): Promise<void> {
+export async function writeCachedRateSnapshot(sourceId: RateSourceId, snapshot: RateSnapshot): Promise<void> {
   await chrome.storage.session.set({
-    [RATE_SNAPSHOT_KEY]: snapshot
+    [RATE_SNAPSHOT_KEY_PREFIX + sourceId]: snapshot
   });
 }

@@ -39,10 +39,10 @@ export function parseBankOfRussiaRates(xmlText: string, fetchedAt: Date): RateSn
     throw new Error("Invalid Bank of Russia XML: missing ValCurs Date");
   }
 
-  const ratesToRub: Record<string, { readonly nominal: number; readonly valueInRub: number }> = {
+  const ratesToBase: Record<string, { readonly nominal: number; readonly valueInBase: number }> = {
     RUB: {
       nominal: 1,
-      valueInRub: 1
+      valueInBase: 1
     }
   };
 
@@ -57,22 +57,23 @@ export function parseBankOfRussiaRates(xmlText: string, fetchedAt: Date): RateSn
 
     const currencyCode = readRequiredChildText(valuteNode, "CharCode");
     const nominal = parsePositiveInteger(readRequiredChildText(valuteNode, "Nominal"), currencyCode);
-    const valueInRub = parseBankDecimal(readRequiredChildText(valuteNode, "Value"), currencyCode);
+    const valueInBase = parseBankDecimal(readRequiredChildText(valuteNode, "Value"), currencyCode);
 
     if (!/^[A-Z]{3}$/u.test(currencyCode)) {
       throw new Error(`Invalid Bank of Russia XML: unsupported currency code ${currencyCode}`);
     }
 
-    ratesToRub[currencyCode] = {
+    ratesToBase[currencyCode] = {
       nominal,
-      valueInRub
+      valueInBase
     };
   }
 
   return {
+    baseCurrency: "RUB",
     fetchedAtIso: fetchedAt.toISOString(),
     rateDate,
-    ratesToRub,
+    ratesToBase,
     sourceName: BANK_OF_RUSSIA_SOURCE_NAME,
     sourceUrl: BANK_OF_RUSSIA_SOURCE_URL
   };

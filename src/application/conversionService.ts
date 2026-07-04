@@ -36,8 +36,8 @@ export function convertCurrencyAmount(
     };
   }
 
-  const amountInRub = original.value * unitValueInRub(sourceRate);
-  const conversions = buildConversionResults(amountInRub, original.currencyCode, targetCurrencyCodes, snapshot);
+  const amountInBase = original.value * unitValueInBase(sourceRate);
+  const conversions = buildConversionResults(amountInBase, original.currencyCode, targetCurrencyCodes, snapshot);
 
   return {
     conversions,
@@ -48,7 +48,7 @@ export function convertCurrencyAmount(
 }
 
 function buildConversionResults(
-  amountInRub: number,
+  amountInBase: number,
   sourceCurrencyCode: string,
   targetCurrencyCodes: readonly string[],
   snapshot: RateSnapshot
@@ -69,7 +69,7 @@ function buildConversionResults(
       continue;
     }
 
-    const amount = amountInRub / unitValueInRub(targetRate);
+    const amount = amountInBase / unitValueInBase(targetRate);
     conversions.push({
       amount,
       formattedAmount: formatCurrencyAmount(amount, targetCurrencyCode),
@@ -80,8 +80,8 @@ function buildConversionResults(
   return conversions;
 }
 
-function unitValueInRub(rate: RateEntry): number {
-  return rate.valueInRub / rate.nominal;
+function unitValueInBase(rate: RateEntry): number {
+  return rate.valueInBase / rate.nominal;
 }
 
 export function formatCurrencyAmount(amount: number, currencyCode: string): string {

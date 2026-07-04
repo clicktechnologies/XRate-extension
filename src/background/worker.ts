@@ -1,11 +1,16 @@
 import { convertCurrencyAmount } from "../application/conversionService.js";
 import type { ConversionResponse, ExtensionResponse, PopupStateResponse } from "../application/messages.js";
 import { parseExtensionRequest } from "../application/messages.js";
+import type { Settings } from "../application/settings.js";
+import { crossFillSnapshot } from "../domain/crossRates.js";
 import { listCurrencyDescriptors } from "../domain/currencyAmount.js";
 import { parseCurrencyAmount } from "../domain/currencyTextParser.js";
-import { isRateSnapshotFresh } from "../domain/rateSnapshot.js";
+import { getRateEntry, isRateSnapshotFresh } from "../domain/rateSnapshot.js";
 import type { RateSnapshot, RateSourceMetadata } from "../domain/rateSnapshot.js";
+import { listFallbackSourceIds, listRateSources } from "../domain/rateSource.js";
+import type { RateSourceId } from "../domain/rateSource.js";
 import { fetchBankOfRussiaRates } from "../infrastructure/bankOfRussiaRates.js";
+import { fetchEuropeanCentralBankRates } from "../infrastructure/europeanCentralBankRates.js";
 import {
   readCachedRateSnapshot,
   readSettings,
@@ -50,23 +55,27 @@ async function handleRuntimeMessage(message: unknown): Promise<ExtensionResponse
   }
 
   if (request.type === "refresh-rates") {
-    const snapshot = await refreshRateSnapshot(new Date());
+    const settings = await readSettings();
+    const snapshot = await refreshRateSnapshot(new Date(), settings.source);
     return {
       ok: true,
-      payload: await getPopupStateWithSnapshot(snapshot)
+      payload: buildPopupState(settings, snapshot)
     };
   }
 
   const settings = await writeSettings(request.settings);
+  let snapshot: RateSnapshot | null;
+
+  try {
+    snapshot = await getFreshRateSnapshot(new Date(), settings.source);
+  } catch {
+    // Saving settings must not fail when the newly selected source is offline.
+    snapshot = await readCachedRateSnapshot(settings.source);
+  }
 
   return {
     ok: true,
-    payload: {
-      availableCurrencies: listCurrencyDescriptors(),
-      settings,
-      source: rateSourceMetadata(await readCachedRateSnapshot()),
-      type: "popup-state"
-    }
+    payload: buildPopupState(settings, snapshot)
   };
 }
 
@@ -89,7 +98,7 @@ async function convertSelection(selectedText: string): Promise<ConversionRespons
     };
   }
 
-  const snapshot = await getFreshRateSnapshot(new Date());
+  const snapshot = await getConversionSnapshot(new Date(), settings, parsedAmount.currencyCode);
   const conversion = convertCurrencyAmount(parsedAmount, settings.targetCurrencies, snapshot);
 
   if (conversion.type === "unsupported-source") {
@@ -108,41 +117,77 @@ async function convertSelection(selectedText: string): Promise<ConversionRespons
 }
 
 async function getPopupState(): Promise<PopupStateResponse> {
-  const snapshot = await getFreshRateSnapshot(new Date());
-  return getPopupStateWithSnapshot(snapshot);
+  const settings = await readSettings();
+  const snapshot = await getFreshRateSnapshot(new Date(), settings.source);
+  return buildPopupState(settings, snapshot);
 }
 
-async function getPopupStateWithSnapshot(snapshot: RateSnapshot): Promise<PopupStateResponse> {
+function buildPopupState(settings: Settings, snapshot: RateSnapshot | null): PopupStateResponse {
   return {
     availableCurrencies: listCurrencyDescriptors(),
-    settings: await readSettings(),
-    source: rateSourceMetadataFromSnapshot(snapshot),
+    availableSources: listRateSources(),
+    settings,
+    source: snapshot === null ? null : rateSourceMetadataFromSnapshot(snapshot),
     type: "popup-state"
   };
 }
 
-async function getFreshRateSnapshot(now: Date): Promise<RateSnapshot> {
-  const cachedSnapshot = await readCachedRateSnapshot();
+async function getConversionSnapshot(now: Date, settings: Settings, sourceCurrencyCode: string): Promise<RateSnapshot> {
+  const primary = await getFreshRateSnapshot(now, settings.source);
+  const neededCurrencyCodes = [sourceCurrencyCode, ...settings.targetCurrencies];
+
+  if (neededCurrencyCodes.every((code) => getRateEntry(primary, code) !== null)) {
+    return primary;
+  }
+
+  let filled = primary;
+
+  // Only reach for another source when the active one is actually missing a rate.
+  for (const fallbackId of listFallbackSourceIds(settings.source)) {
+    if (neededCurrencyCodes.every((code) => getRateEntry(filled, code) !== null)) {
+      break;
+    }
+
+    const fallback = await loadSnapshotOrNull(now, fallbackId);
+
+    if (fallback !== null) {
+      filled = crossFillSnapshot(filled, fallback, neededCurrencyCodes);
+    }
+  }
+
+  return filled;
+}
+
+async function loadSnapshotOrNull(now: Date, sourceId: RateSourceId): Promise<RateSnapshot | null> {
+  try {
+    return await getFreshRateSnapshot(now, sourceId);
+  } catch {
+    return null;
+  }
+}
+
+async function getFreshRateSnapshot(now: Date, sourceId: RateSourceId): Promise<RateSnapshot> {
+  const cachedSnapshot = await readCachedRateSnapshot(sourceId);
 
   if (cachedSnapshot !== null && isRateSnapshotFresh(cachedSnapshot, now.getTime())) {
     return cachedSnapshot;
   }
 
-  return refreshRateSnapshot(now);
+  return refreshRateSnapshot(now, sourceId);
 }
 
-async function refreshRateSnapshot(now: Date): Promise<RateSnapshot> {
-  const snapshot = await fetchBankOfRussiaRates(fetch, now);
-  await writeCachedRateSnapshot(snapshot);
+async function refreshRateSnapshot(now: Date, sourceId: RateSourceId): Promise<RateSnapshot> {
+  const snapshot = await fetchRatesForSource(sourceId, now);
+  await writeCachedRateSnapshot(sourceId, snapshot);
   return snapshot;
 }
 
-function rateSourceMetadata(snapshot: RateSnapshot | null): RateSourceMetadata | null {
-  if (snapshot === null) {
-    return null;
+function fetchRatesForSource(sourceId: RateSourceId, now: Date): Promise<RateSnapshot> {
+  if (sourceId === "cbr") {
+    return fetchBankOfRussiaRates(fetch, now);
   }
 
-  return rateSourceMetadataFromSnapshot(snapshot);
+  return fetchEuropeanCentralBankRates(fetch, now);
 }
 
 function rateSourceMetadataFromSnapshot(snapshot: RateSnapshot): RateSourceMetadata {
