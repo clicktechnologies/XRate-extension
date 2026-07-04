@@ -64,7 +64,7 @@ class ContentSelectionController {
     }
 
     if (response.payload.conversions.length === 0) {
-      this.tooltipView.showError("Нет настроенных валют для конвертации", position);
+      this.tooltipView.showError(chrome.i18n.getMessage("tooltipNoCurrencies"), position);
       return;
     }
 
@@ -81,7 +81,7 @@ async function sendConvertSelectionRequest(selectedText: string): Promise<Extens
 
   if (response === null) {
     return {
-      error: "Invalid XRate response",
+      error: chrome.i18n.getMessage("errorInvalidResponse"),
       ok: false
     };
   }

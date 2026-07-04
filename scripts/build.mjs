@@ -9,6 +9,8 @@ const distDir = join(projectRoot, "dist");
 const staticFiles = [
   ["extension/manifest.json", "manifest.json"],
   ["extension/popup.html", "popup.html"],
+  ["extension/_locales/en/messages.json", "_locales/en/messages.json"],
+  ["extension/_locales/ru/messages.json", "_locales/ru/messages.json"],
   ["src/popup/popup.css", "popup.css"],
   ["extension/icons/icon-16.png", "icons/icon-16.png"],
   ["extension/icons/icon-32.png", "icons/icon-32.png"],

@@ -1,0 +1,148 @@
+{
+  "appName": {
+    "message": "XRate"
+  },
+  "appDescription": {
+    "message": "Конвертация выделенных сумм по официальным курсам валют."
+  },
+  "toggleEnabled": {
+    "message": "Включено"
+  },
+  "sectionCurrencies": {
+    "message": "Валюты конвертации"
+  },
+  "currenciesHint": {
+    "message": "Показываются в подсказке при выделении суммы"
+  },
+  "sectionSource": {
+    "message": "Источник курса"
+  },
+  "providerLabel": {
+    "message": "Провайдер"
+  },
+  "metaSource": {
+    "message": "Источник"
+  },
+  "metaRateDate": {
+    "message": "Дата курса"
+  },
+  "metaFetchedAt": {
+    "message": "Обновлено"
+  },
+  "loading": {
+    "message": "Загрузка..."
+  },
+  "openSource": {
+    "message": "Открыть источник"
+  },
+  "refreshRates": {
+    "message": "Обновить курс"
+  },
+  "statusLoadingSettings": {
+    "message": "Загружаю настройки..."
+  },
+  "statusRefreshing": {
+    "message": "Обновляю курс..."
+  },
+  "statusRatesUpdated": {
+    "message": "Курс обновлён"
+  },
+  "statusSettingsSaved": {
+    "message": "Настройки сохранены"
+  },
+  "sourceNone": {
+    "message": "Нет загруженного курса"
+  },
+  "noData": {
+    "message": "Нет данных"
+  },
+  "errorInvalidResponse": {
+    "message": "Некорректный ответ XRate"
+  },
+  "tooltipNoCurrencies": {
+    "message": "Нет валют для конвертации"
+  },
+  "tooltipMeta": {
+    "message": "$source$, курс $date$",
+    "placeholders": {
+      "source": {
+        "content": "$1"
+      },
+      "date": {
+        "content": "$2"
+      }
+    }
+  },
+  "currency_rub": {
+    "message": "Российский рубль"
+  },
+  "currency_usd": {
+    "message": "Доллар США"
+  },
+  "currency_eur": {
+    "message": "Евро"
+  },
+  "currency_gbp": {
+    "message": "Фунт стерлингов"
+  },
+  "currency_aud": {
+    "message": "Австралийский доллар"
+  },
+  "currency_cad": {
+    "message": "Канадский доллар"
+  },
+  "currency_chf": {
+    "message": "Швейцарский франк"
+  },
+  "currency_sgd": {
+    "message": "Сингапурский доллар"
+  },
+  "currency_hkd": {
+    "message": "Гонконгский доллар"
+  },
+  "currency_nzd": {
+    "message": "Новозеландский доллар"
+  },
+  "currency_aed": {
+    "message": "Дирхам ОАЭ"
+  },
+  "currency_inr": {
+    "message": "Индийская рупия"
+  },
+  "currency_brl": {
+    "message": "Бразильский реал"
+  },
+  "currency_pln": {
+    "message": "Польский злотый"
+  },
+  "currency_sek": {
+    "message": "Шведская крона"
+  },
+  "currency_nok": {
+    "message": "Норвежская крона"
+  },
+  "currency_dkk": {
+    "message": "Датская крона"
+  },
+  "currency_thb": {
+    "message": "Тайский бат"
+  },
+  "currency_zar": {
+    "message": "Южноафриканский ранд"
+  },
+  "currency_krw": {
+    "message": "Южнокорейская вона"
+  },
+  "currency_cny": {
+    "message": "Китайский юань"
+  },
+  "currency_jpy": {
+    "message": "Японская иена"
+  },
+  "currency_kzt": {
+    "message": "Казахстанский тенге"
+  },
+  "currency_try": {
+    "message": "Турецкая лира"
+  }
+}

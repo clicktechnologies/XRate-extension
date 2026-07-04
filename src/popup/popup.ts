@@ -30,10 +30,29 @@ refreshRatesButton.addEventListener("click", () => {
   refreshRates().catch(showError);
 });
 
+localizePage();
 loadPopupState().catch(showError);
 
+function localizePage(): void {
+  document.documentElement.lang = chrome.i18n.getUILanguage();
+  document.title = t("appName");
+
+  for (const element of document.querySelectorAll("[data-i18n]")) {
+    const key = element.getAttribute("data-i18n");
+    const message = key === null ? "" : t(key);
+
+    if (message.length > 0) {
+      element.textContent = message;
+    }
+  }
+}
+
+function t(key: string): string {
+  return chrome.i18n.getMessage(key);
+}
+
 async function loadPopupState(): Promise<void> {
-  setStatus("Загружаю настройки...");
+  setStatus(t("statusLoadingSettings"));
   const response = await sendRequest({
     type: "get-popup-state"
   });
@@ -43,14 +62,14 @@ async function loadPopupState(): Promise<void> {
 
 async function refreshRates(): Promise<void> {
   refreshRatesButton.disabled = true;
-  setStatus("Обновляю курс...");
+  setStatus(t("statusRefreshing"));
 
   try {
     const response = await sendRequest({
       type: "refresh-rates"
     });
     renderPopupResponse(response);
-    setStatus("Курс обновлен");
+    setStatus(t("statusRatesUpdated"));
   } finally {
     refreshRatesButton.disabled = false;
   }
@@ -67,7 +86,7 @@ async function saveCurrentSettings(): Promise<void> {
     type: "save-settings"
   });
   renderPopupResponse(response);
-  setStatus("Настройки сохранены");
+  setStatus(t("statusSettingsSaved"));
 }
 
 async function sendRequest(message: unknown): Promise<ExtensionResponse> {
@@ -76,7 +95,7 @@ async function sendRequest(message: unknown): Promise<ExtensionResponse> {
 
   if (response === null) {
     return {
-      error: "Invalid XRate response",
+      error: t("errorInvalidResponse"),
       ok: false
     };
   }
@@ -119,7 +138,8 @@ function renderSettings(settings: Settings, availableCurrencies: readonly Curren
   for (const currency of availableCurrencies) {
     const label = document.createElement("label");
     label.className = "xrate-currency";
-    label.title = currency.displayName;
+    const localizedName = t("currency_" + currency.code.toLowerCase());
+    label.title = localizedName.length > 0 ? localizedName : currency.displayName;
 
     const checkbox = document.createElement("input");
     checkbox.type = "checkbox";
@@ -159,9 +179,9 @@ function updateCurrencyCount(): void {
 
 function renderSource(state: PopupStateResponse): void {
   if (state.source === null) {
-    sourceName.textContent = "Нет загруженного курса";
-    rateDate.textContent = "Нет данных";
-    fetchedAt.textContent = "Нет данных";
+    sourceName.textContent = t("sourceNone");
+    rateDate.textContent = t("noData");
+    fetchedAt.textContent = t("noData");
     sourceLink.href = "#";
     return;
   }

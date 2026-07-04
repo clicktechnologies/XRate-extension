@@ -49,7 +49,10 @@ export class TooltipView {
 
     const meta = document.createElement("p");
     meta.className = "meta";
-    meta.textContent = `${response.source.sourceName}, курс ${response.source.rateDate}`;
+    meta.textContent = chrome.i18n.getMessage("tooltipMeta", [
+      response.source.sourceName,
+      response.source.rateDate
+    ]);
     panel.append(meta);
 
     this.shadowRoot.replaceChildren(createStyles(), panel);

@@ -1,0 +1,148 @@
+{
+  "appName": {
+    "message": "XRate"
+  },
+  "appDescription": {
+    "message": "Convert selected currency amounts using official exchange rates."
+  },
+  "toggleEnabled": {
+    "message": "Enabled"
+  },
+  "sectionCurrencies": {
+    "message": "Conversion currencies"
+  },
+  "currenciesHint": {
+    "message": "Shown in the tooltip when you select an amount"
+  },
+  "sectionSource": {
+    "message": "Rate source"
+  },
+  "providerLabel": {
+    "message": "Provider"
+  },
+  "metaSource": {
+    "message": "Source"
+  },
+  "metaRateDate": {
+    "message": "Rate date"
+  },
+  "metaFetchedAt": {
+    "message": "Updated"
+  },
+  "loading": {
+    "message": "Loading…"
+  },
+  "openSource": {
+    "message": "View source"
+  },
+  "refreshRates": {
+    "message": "Refresh rate"
+  },
+  "statusLoadingSettings": {
+    "message": "Loading settings…"
+  },
+  "statusRefreshing": {
+    "message": "Refreshing rate…"
+  },
+  "statusRatesUpdated": {
+    "message": "Rate updated"
+  },
+  "statusSettingsSaved": {
+    "message": "Settings saved"
+  },
+  "sourceNone": {
+    "message": "No rate loaded"
+  },
+  "noData": {
+    "message": "No data"
+  },
+  "errorInvalidResponse": {
+    "message": "Invalid XRate response"
+  },
+  "tooltipNoCurrencies": {
+    "message": "No currencies selected for conversion"
+  },
+  "tooltipMeta": {
+    "message": "$source$, rate $date$",
+    "placeholders": {
+      "source": {
+        "content": "$1"
+      },
+      "date": {
+        "content": "$2"
+      }
+    }
+  },
+  "currency_rub": {
+    "message": "Russian ruble"
+  },
+  "currency_usd": {
+    "message": "US dollar"
+  },
+  "currency_eur": {
+    "message": "Euro"
+  },
+  "currency_gbp": {
+    "message": "Pound sterling"
+  },
+  "currency_aud": {
+    "message": "Australian dollar"
+  },
+  "currency_cad": {
+    "message": "Canadian dollar"
+  },
+  "currency_chf": {
+    "message": "Swiss franc"
+  },
+  "currency_sgd": {
+    "message": "Singapore dollar"
+  },
+  "currency_hkd": {
+    "message": "Hong Kong dollar"
+  },
+  "currency_nzd": {
+    "message": "New Zealand dollar"
+  },
+  "currency_aed": {
+    "message": "UAE dirham"
+  },
+  "currency_inr": {
+    "message": "Indian rupee"
+  },
+  "currency_brl": {
+    "message": "Brazilian real"
+  },
+  "currency_pln": {
+    "message": "Polish zloty"
+  },
+  "currency_sek": {
+    "message": "Swedish krona"
+  },
+  "currency_nok": {
+    "message": "Norwegian krone"
+  },
+  "currency_dkk": {
+    "message": "Danish krone"
+  },
+  "currency_thb": {
+    "message": "Thai baht"
+  },
+  "currency_zar": {
+    "message": "South African rand"
+  },
+  "currency_krw": {
+    "message": "South Korean won"
+  },
+  "currency_cny": {
+    "message": "Chinese yuan"
+  },
+  "currency_jpy": {
+    "message": "Japanese yen"
+  },
+  "currency_kzt": {
+    "message": "Kazakhstani tenge"
+  },
+  "currency_try": {
+    "message": "Turkish lira"
+  }
+}
