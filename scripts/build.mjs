@@ -9,7 +9,11 @@ const distDir = join(projectRoot, "dist");
 const staticFiles = [
   ["extension/manifest.json", "manifest.json"],
   ["extension/popup.html", "popup.html"],
-  ["src/popup/popup.css", "popup.css"]
+  ["src/popup/popup.css", "popup.css"],
+  ["extension/icons/icon-16.png", "icons/icon-16.png"],
+  ["extension/icons/icon-32.png", "icons/icon-32.png"],
+  ["extension/icons/icon-48.png", "icons/icon-48.png"],
+  ["extension/icons/icon-128.png", "icons/icon-128.png"]
 ];
 
 const entryPoints = [
