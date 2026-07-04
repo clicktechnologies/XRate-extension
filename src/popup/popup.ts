@@ -135,11 +135,16 @@ function renderSettings(settings: Settings, availableCurrencies: readonly Curren
     code.className = "xrate-currency__code";
     code.textContent = currency.code;
 
-    const symbol = document.createElement("span");
-    symbol.className = "xrate-currency__symbol";
-    symbol.textContent = currency.symbol;
+    label.append(checkbox, code);
 
-    label.append(checkbox, code, symbol);
+    // Show the glyph only when it adds information (skip "AUD AUD" style repeats).
+    if (currency.symbol !== currency.code) {
+      const symbol = document.createElement("span");
+      symbol.className = "xrate-currency__symbol";
+      symbol.textContent = currency.symbol;
+      label.append(symbol);
+    }
+
     currencyList.append(label);
   }
 

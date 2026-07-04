@@ -173,19 +173,20 @@ h2 {
 /* Currency chips */
 .xrate-currency-list {
   display: grid;
-  gap: 8px;
-  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  grid-template-columns: repeat(3, 1fr);
 }
 
 .xrate-currency {
-  align-items: center;
+  align-items: baseline;
   background: var(--surface-2);
   border: 1px solid var(--border);
-  border-radius: 9px;
+  border-radius: 8px;
   cursor: pointer;
   display: flex;
-  justify-content: space-between;
-  padding: 9px 11px;
+  gap: 5px;
+  justify-content: center;
+  padding: 6px 8px;
   transition: border-color 0.12s ease, background 0.12s ease;
   user-select: none;
 }
@@ -207,7 +208,7 @@ h2 {
 
 .xrate-currency__symbol {
   color: var(--muted);
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .xrate-currency:has(.xrate-currency__input:checked) {

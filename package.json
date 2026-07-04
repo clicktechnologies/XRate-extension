@@ -6,6 +6,7 @@
   "description": "Chrome extension that converts selected currency amounts with official exchange rates.",
   "scripts": {
     "build": "node scripts/build.mjs",
+    "package": "npm run build && cd dist && zip -qr ../xrate-$npm_package_version.zip .",
     "compile:test": "rm -rf .tmp-test && tsc -p tsconfig.test.json",
     "lint": "node scripts/lint.mjs",
     "test": "npm run compile:test && node --test .tmp-test/test/**/*.test.js",
