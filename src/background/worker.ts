@@ -118,7 +118,7 @@ async function convertSelection(selectedText: string): Promise<ConversionRespons
 
 async function getPopupState(): Promise<PopupStateResponse> {
   const settings = await readSettings();
-  const snapshot = await getFreshRateSnapshot(new Date(), settings.source);
+  const snapshot = await loadBestEffortSnapshot(new Date(), settings.source);
   return buildPopupState(settings, snapshot);
 }
 
@@ -163,6 +163,21 @@ async function loadSnapshotOrNull(now: Date, sourceId: RateSourceId): Promise<Ra
     return await getFreshRateSnapshot(now, sourceId);
   } catch {
     return null;
+  }
+}
+
+// ponytail: the popup must open offline, so fall back to the last cached snapshot (even if stale) when a refresh fails.
+async function loadBestEffortSnapshot(now: Date, sourceId: RateSourceId): Promise<RateSnapshot | null> {
+  const cached = await readCachedRateSnapshot(sourceId);
+
+  if (cached !== null && isRateSnapshotFresh(cached, now.getTime())) {
+    return cached;
+  }
+
+  try {
+    return await refreshRateSnapshot(now, sourceId);
+  } catch {
+    return cached;
   }
 }
 

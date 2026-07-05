@@ -33,7 +33,7 @@
 
 body {
   margin: 0;
-  min-width: 340px;
+  width: 600px;
   background: var(--bg);
   color: var(--text);
   font-size: 14px;
@@ -58,16 +58,27 @@ p {
 }
 
 .xrate-popup {
+  align-items: stretch;
   display: grid;
-  gap: 16px;
-  padding: 16px;
+  gap: 12px 16px;
+  grid-template-columns: 1.5fr 1fr;
+  padding: 14px 16px;
 }
 
 /* Header */
 .xrate-popup__header {
   align-items: center;
   display: flex;
+  gap: 12px;
+  grid-column: 1 / -1;
   justify-content: space-between;
+}
+
+.xrate-popup__controls {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+  min-width: 0;
 }
 
 .xrate-brand {
@@ -137,7 +148,8 @@ h1 {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 12px;
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 10px;
   padding: 14px;
 }
@@ -174,7 +186,7 @@ h2 {
 .xrate-currency-list {
   display: grid;
   gap: 6px;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(66px, 1fr));
 }
 
 .xrate-currency {
@@ -186,7 +198,7 @@ h2 {
   display: flex;
   gap: 5px;
   justify-content: center;
-  padding: 6px 8px;
+  padding: 5px 8px;
   transition: border-color 0.12s ease, background 0.12s ease;
   user-select: none;
 }
@@ -276,6 +288,7 @@ select {
   display: flex;
   gap: 10px;
   justify-content: space-between;
+  margin-top: auto;
 }
 
 a {
@@ -305,6 +318,8 @@ button:disabled {
 .xrate-status {
   color: var(--muted);
   font-size: 12px;
-  min-height: 16px;
-  text-align: center;
+  overflow: hidden;
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

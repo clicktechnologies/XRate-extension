@@ -13,10 +13,13 @@
           <img class="xrate-brand__icon" src="icons/icon-48.png" alt="">
           <h1>XRate</h1>
         </div>
-        <label class="xrate-switch">
-          <input id="enabled" type="checkbox">
-          <span data-i18n="toggleEnabled">Enabled</span>
-        </label>
+        <div class="xrate-popup__controls">
+          <p id="status" class="xrate-status" role="status"></p>
+          <label class="xrate-switch">
+            <input id="enabled" type="checkbox">
+            <span data-i18n="toggleEnabled">Enabled</span>
+          </label>
+        </div>
       </header>
 
       <section class="xrate-section">
@@ -53,8 +56,6 @@
           <button id="refresh-rates" type="button" data-i18n="refreshRates">Refresh rate</button>
         </div>
       </section>
-
-      <p id="status" class="xrate-status" role="status"></p>
     </main>
     <script src="popup.js"></script>
   </body>

@@ -69,7 +69,10 @@ async function refreshRates(): Promise<void> {
       type: "refresh-rates"
     });
     renderPopupResponse(response);
-    setStatus(t("statusRatesUpdated"));
+
+    if (response.ok) {
+      setStatus(t("statusRatesUpdated"));
+    }
   } finally {
     refreshRatesButton.disabled = false;
   }
@@ -86,7 +89,10 @@ async function saveCurrentSettings(): Promise<void> {
     type: "save-settings"
   });
   renderPopupResponse(response);
-  setStatus(t("statusSettingsSaved"));
+
+  if (response.ok) {
+    setStatus(t("statusSettingsSaved"));
+  }
 }
 
 async function sendRequest(message: unknown): Promise<ExtensionResponse> {
