@@ -144,5 +144,14 @@
   },
   "currency_try": {
     "message": "Turkish lira"
+  },
+  "currency_amd": {
+    "message": "Armenian dram"
+  },
+  "currency_gel": {
+    "message": "Georgian lari"
+  },
+  "currency_uzs": {
+    "message": "Uzbek som"
   }
 }

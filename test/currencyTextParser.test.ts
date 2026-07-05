@@ -80,6 +80,50 @@ test("parses additional international currency aliases", () => {
   });
 });
 
+test("parses Armenian dram, Georgian lari and Uzbek som", () => {
+  assert.deepEqual(parseCurrencyAmount("500 ֏"), {
+    currencyCode: "AMD",
+    originalText: "500 ֏",
+    value: 500
+  });
+
+  assert.deepEqual(parseCurrencyAmount("₾50"), {
+    currencyCode: "GEL",
+    originalText: "₾50",
+    value: 50
+  });
+
+  assert.deepEqual(parseCurrencyAmount("3000 сум"), {
+    currencyCode: "UZS",
+    originalText: "3000 сум",
+    value: 3000
+  });
+
+  assert.deepEqual(parseCurrencyAmount("300 драм"), {
+    currencyCode: "AMD",
+    originalText: "300 драм",
+    value: 300
+  });
+
+  assert.deepEqual(parseCurrencyAmount("300 դրամ"), {
+    currencyCode: "AMD",
+    originalText: "300 դրամ",
+    value: 300
+  });
+
+  assert.deepEqual(parseCurrencyAmount("50 ლარი"), {
+    currencyCode: "GEL",
+    originalText: "50 ლარი",
+    value: 50
+  });
+
+  assert.deepEqual(parseCurrencyAmount("3000 soʻm"), {
+    currencyCode: "UZS",
+    originalText: "3000 soʻm",
+    value: 3000
+  });
+});
+
 test("rejects long text selections", () => {
   assert.equal(parseCurrencyAmount("The product costs 100.8 USD and this sentence is intentionally too long for a tooltip."), null);
 });

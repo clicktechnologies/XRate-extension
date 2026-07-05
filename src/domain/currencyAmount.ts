@@ -34,7 +34,10 @@ export const CURRENCY_DESCRIPTORS: readonly CurrencyDescriptor[] = [
   { code: "CNY", displayName: "Китайский юань", symbol: "CNY" },
   { code: "JPY", displayName: "Японская иена", symbol: "JPY" },
   { code: "KZT", displayName: "Казахстанский тенге", symbol: "₸" },
-  { code: "TRY", displayName: "Турецкая лира", symbol: "₺" }
+  { code: "TRY", displayName: "Турецкая лира", symbol: "₺" },
+  { code: "AMD", displayName: "Армянский драм", symbol: "֏" },
+  { code: "GEL", displayName: "Грузинский лари", symbol: "₾" },
+  { code: "UZS", displayName: "Узбекский сум", symbol: "UZS" }
 ];
 
 const SYMBOL_TO_CODE = new Map(CURRENCY_DESCRIPTORS.map((currency) => [currency.symbol, currency.code]));
@@ -57,7 +60,21 @@ const TOKEN_TO_CODE = new Map([
   ["РУБ.", "RUB"],
   ["РУБЛЕЙ", "RUB"],
   ["РУБЛЬ", "RUB"],
-  ["РУБЛЯ", "RUB"]
+  ["РУБЛЯ", "RUB"],
+  ["ДРАМ", "AMD"],
+  ["ДРАМОВ", "AMD"],
+  ["DRAM", "AMD"],
+  ["ԴՐԱՄ", "AMD"],
+  ["ЛАРИ", "GEL"],
+  ["LARI", "GEL"],
+  ["ᲚᲐᲠᲘ", "GEL"],
+  ["СУМ", "UZS"],
+  ["СУМОВ", "UZS"],
+  ["СЎМ", "UZS"],
+  ["СОМ", "UZS"],
+  ["СОМОВ", "UZS"],
+  ["SOM", "UZS"],
+  ["SOʻM", "UZS"]
 ]);
 
 export function getCurrencyCodeForSymbol(symbol: string): string | null {
